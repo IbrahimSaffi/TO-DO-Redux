@@ -3,42 +3,52 @@ import { createSlice } from "@reduxjs/toolkit";
 const TasksSlice = createSlice({
     name: "task-slice",
     initialState: {
-        all: [],
+        tasks: [],
         filterType: "all",
-        completed:[],
-        active:[],
         itemToBePlaced :null,
         locToBePlaced:null,
-        theme:"dark"
+        theme:"dark",
+        activeTasks:0
     },
     reducers: {
       changeFilter:(state,action)=>{
         state.filterType=action.payload
       },
-        filter:(state,action)=> {
-             state.completed = state.all.filter(ele=>{
-                return ele.isComplete
-             })    
-                state.active = state.all.filter(ele=>{
-                   return !ele.isComplete
-                })
-        },
         addTask:(state,action)=>{
           let task = {value :action.payload,isComplete:false}  
-          state.all.push(task)
+          state.tasks.push(task)
+          state.activeTasks++
 
         },
         completed:(state,action)=>{
-          state.all[action.payload].isComplete 
-          =!state.all[action.payload].isComplete
+          console.log(action.payload)
+          let index;
+          state.tasks.forEach((ele,i)=>{
+            if(action.payload.value===ele.value){
+            index=i
+            }
+          })
+          console.log(index)
+          if(state.tasks[index].isComplete){
+            state.activeTasks++
+          }
+          else{
+            state.activeTasks--
+          }
+          state.tasks[index].isComplete 
+          =!state.tasks[index].isComplete
         },
         clear:(state,action)=>{
-          //Problem here
-           state.all = state.active.slice()            
+           state.tasks=state.tasks.filter(ele=>!ele.isComplete)            
   
         },
         del:(state,action)=>{
-        state.all.splice(action.payload,1)
+         let delInd= state.tasks.findIndex((ele)=>{
+        console.log(ele,action.payload)
+         return ele===action.payload
+        })
+         
+        state.tasks.splice(delInd,1)
         },
         dragStart:(state,action)=> {
           state.itemToBePlaced = action.payload
@@ -47,8 +57,8 @@ const TasksSlice = createSlice({
             state.locToBePlaced = action.payload
           },
         drop:(state,action)=>{
-         let task = state[state.filterType].splice(state.itemToBePlaced,1)
-         state[state.filterType].splice(state.locToBePlaced,0,task[0])
+         let task = state.tasks.splice(state.itemToBePlaced,1)
+         state.tasks.splice(state.locToBePlaced,0,task[0])
          state.itemToBePlaced = null
          state.locToBePlaced=null
         },
@@ -58,5 +68,5 @@ const TasksSlice = createSlice({
     }
 }
 )
-export const {filter,changeFilter,addTask,completed,clear,del,dragStart,dragOver,drop,toggle} = TasksSlice.actions
+export const {changeFilter,addTask,completed,clear,del,dragStart,dragOver,drop,toggle} = TasksSlice.actions
 export default TasksSlice.reducer

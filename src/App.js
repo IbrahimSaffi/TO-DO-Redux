@@ -2,8 +2,7 @@ import CardComponent from "./components/CardComponent.jsx"
 import { useDispatch,useSelector } from 'react-redux'
 
 import "./index.css"
-import tasksSlice, { addTask, filter, toggle } from "./components/TasksSlice.jsx";
-import { useEffect } from "react";
+import tasksSlice, { addTask, toggle } from "./components/TasksSlice.jsx";
 
     function App(){
       let state = useSelector(state=>state.tasksState)
@@ -26,7 +25,6 @@ import { useEffect } from "react";
         if(e.key==="Enter"){
           if(e.target.value.length>0){
            dispatch(addTask(e.target.value))
-           dispatch(filter())
             e.target.value=""
           }
         }

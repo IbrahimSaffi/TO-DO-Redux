@@ -1,4 +1,4 @@
-import TasksSlice, { completed, del, dragOver, dragStart, drop, filter } from "./TasksSlice"
+import TasksSlice, { completed, del, dragOver, dragStart, drop } from "./TasksSlice"
 import { useDispatch,useSelector } from 'react-redux'
 
 
@@ -22,27 +22,23 @@ export default function TaskCard(props) {
         dispatch(dragOver(props.index))
       }} 
        onDragEnd={()=>{
-        console.log("drop")
         dispatch(drop())
-        dispatch(filter())
        }}
-      className={`task-card ${state[state.filterType][props.index].isComplete?"completed":""}`} key={props.index}  >
+      className={`task-card ${props.task.isComplete?"completed":""}`} key={props.index}  >
            <div className="btn-wrapper">
            <button className={`round-btn`} onClick={()=>
             {
-              dispatch(completed(props.index))
-              dispatch(filter())
+              dispatch(completed(props.task))
             
             }} >
             </button>
 
            </div>
           <p>
-             {state[state.filterType][props.index].value}
+             {props.task.value}
           </p>  
           <p className="del" onClick={()=> {
-            dispatch(del(props.index))
-            dispatch(filter())
+            dispatch(del(props.task))
            }} >
           ✕
           </p>

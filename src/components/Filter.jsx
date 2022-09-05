@@ -1,10 +1,10 @@
 import {useSelector,useDispatch} from 'react-redux'
-import tasksSlice, { changeFilter, changefilter, clear, completed, filter } from './TasksSlice'
+import tasksSlice, { changeFilter, clear } from './TasksSlice'
 function Filter() {
     let tasksState = useSelector(state=>state.tasksState)
     let dispatch = useDispatch(tasksSlice)
     return (<div className="task-card filter-card">
-        <button className="item-num" >{tasksState.active.length===0?"No":tasksState.active.length} Items left</button>
+        <button className="item-num" >{tasksState.activeTasks===0?"No":tasksState.activeTasks} Items left</button>
         <div className="filter-types" >
             <button className={tasksState.filterType==="all"?"active":""} onClick={() => dispatch(changeFilter("all"))} > All</button>
             <button className={tasksState.filterType==="active"?"active":""} onClick={() => dispatch(changeFilter("active"))} >Active</button>
@@ -12,7 +12,6 @@ function Filter() {
         </div>
         <button className="clr" onClick={()=>{
             dispatch(clear())
-            dispatch(filter())
             }} >
             Clear Completed
         </button>
